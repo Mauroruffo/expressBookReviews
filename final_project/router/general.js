@@ -4,6 +4,11 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+//Creating a promise method. The promise will get resolved when timer times out after 6 seconds.
+let myPromise = new Promise((resolve,reject) => {
+    setTimeout(() => {
+      resolve("Promise resolved")
+    },6000)})
 
 public_users.post("/register", (req,res) => {
   const username = req.body.username;
@@ -27,7 +32,10 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  res.send(JSON.stringify(books,null,3))//This line is to be replaced with actual return value
+  myPromise.then((successMessage) => {
+    res.send(JSON.stringify(books,null,3));
+    console.log("From Callback " + successMessage)
+  })
   //return res.status(300).json({message: "Yet to be implemented"});
 });
 
@@ -37,7 +45,10 @@ public_users.get('/isbn/:isbn',function (req, res) {
   let isbn = req.params.isbn;
   if (books[isbn])
   {
-    res.send(books[isbn]);
+    myPromise.then((successMessage) => {
+        res.send(books[isbn]);
+        console.log("From Callback " + successMessage)
+      })
   }
   else
   {
@@ -56,7 +67,10 @@ public_users.get('/author/:author',function (req, res) {
   {
     if (author == books[i]["author"])
     {
-        res.send(books[i]);
+        myPromise.then((successMessage) => {
+            res.send(books[i]);
+            console.log("From Callback " + successMessage)
+          })
         found = true;
     }
   }
@@ -76,7 +90,10 @@ public_users.get('/title/:title',function (req, res) {
   {
     if (title == books[i]["title"])
     {
-        res.send(books[i]);
+        myPromise.then((successMessage) => {
+            res.send(books[i]);
+            console.log("From Callback " + successMessage)
+          })
         found = true;
     }
   }
